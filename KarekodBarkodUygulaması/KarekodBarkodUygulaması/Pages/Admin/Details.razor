@@ -1,0 +1,35 @@
+﻿@page "/admin/products/details/{id:int}"
+
+<h3 class="bg-info text-white text-center p-1">Details a Products</h3>
+
+<table class="table table-sm table-bordered table-striped">
+    <tbody>
+        <tr><th>ID</th><td>@Products.productID</td></tr>
+        <tr><th>Product Img</th><td><img src=@Products.productImgUrl alt=@Products.productName width="100" height="100"></td></tr>
+        <tr><th>Product Barkod Img</th><td><img src=@Products.productBarkodImgUrl alt=@Products.productName width="100" height="100"></td></tr>
+        <tr><th>Karekod Img</th><td><img src=@Products.karekodImgUrl alt=@Products.productName width="100" height="100"></td></tr>
+        <tr><th>Product Barkod</th><td>@Products.productBarkod</td></tr>
+        <tr><th>Product Name</th><td>@Products.productName</td></tr>
+        <tr><th>Product Açıklama</th><td>@Products.productAciklama</td></tr>
+        <tr><th>Product Fiyat</th><td>@Products.productFiyat</td></tr>
+        <tr><th>Product Adet</th><td>@Products.productAdet</td></tr>
+    </tbody>
+</table>
+
+<NavLink class="btn btn-warning" href="@EditUrl">Düzenle</NavLink>
+<NavLink class="btn btn-secondary" href="/admin/products">Geri</NavLink>
+
+@code { [Inject]
+    public IProductsRepository Repository { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    public Product Products { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        Products = Repository.Products.FirstOrDefault(p => p.productID == Id);
+    }
+
+    public string EditUrl => $"/admin/products/edit/{Products.productID}"; }

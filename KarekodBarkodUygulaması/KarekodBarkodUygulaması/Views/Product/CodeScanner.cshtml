@@ -1,0 +1,266 @@
+﻿@{
+    ViewData["Title"] = "Scanner Page";
+}
+
+<style>
+    .file-drop-area {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: 100%;
+        padding: 25px;
+        border: 1px dashed rgba(255, 255, 255, 0.4);
+        border-radius: 3px;
+        transition: 0.2s;
+        background-color: rgb(255, 229, 183);
+    }
+
+    .choose-file-button {
+        flex-shrink: 0;
+        background-color: rgb(255, 185, 71);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        padding: 8px 15px;
+        margin-right: 10px;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+
+    .file-message {
+        font-size: small;
+        font-weight: 300;
+        line-height: 1.4;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .file-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        cursor: pointer;
+        opacity: 0;
+    }
+</style>
+@model KarekodBarkodUygulaması.Models.ViewModels.BarcodeScannerViewModel
+<!--QRCode Ve Barkod olarak ikiye ayrılmış nav-tabs-->
+<div class="p-3 bg-white rounded">
+    <ul class="nav nav-tabs">
+        <!--QRCode-->
+        <li class="active"><a data-toggle="tab" href="#codescanner" onclick="durdur();">QR Kod/Barkod Yükle</a></li>
+        <!--Barkod-->
+        <li><a data-toggle="tab" href="#webcam" onclick="baslat1();">Webcam Tarat</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="codescanner" class="tab-pane fade in active">
+            <div class="container d-flex justify-content-center">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Taratmak İstediğiniz QR Kod/Barkod fotoğrafını Yükleyin</h3>
+                        <!--Yüklenen resim QRCodeScanner fonksiyonuna gönderilir-->
+                        <form asp-action="QRCodeScanner" enctype="multipart/form-data">
+                            <div class="file-drop-area mb-2">
+                                <span class="choose-file-button">Resim Seç</span>
+                                <span class="file-message">ya da resmi sürükle bırak...</span>
+                                <!--QRCodeImageFile, BarcodeScannerViewModel içerisinde IFormFile değişkenidir-->
+                                <input class="file-input" asp-for="QRCodeImageFile" accept="image/*">
+                            </div>
+                            <input class="btn btn-info col-md-12" type="submit" value="Tarat" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div id="barkod" class="tab-pane fade">
+        <div class="container d-flex justify-content-center">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Taratmak İstediğiniz Barkodu Yükleyin</h2>-->
+        <!--Yüklenen resim BarcodeScanner fonksiyonuna gönderilir-->
+        <!--<form asp-action="BarcodeScanner" enctype="multipart/form-data">
+        <div class="file-drop-area mb-2">
+            <span class="choose-file-button">Resim Seç</span>
+            <span class="file-message">ya da resmi sürükle bırak...</span>-->
+        <!--BarkodImageFile, BarcodeScannerViewModel içerisinde IFormFile değişkenidir-->
+        <!--<input class="file-input" asp-for="BarkodImageFile" accept="image/*">
+                            </div>
+                            <input class="btn btn-info col-md-12" type="submit" value="Tarat" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+
+
+        <div id="webcam" class="p-3 bg-white rounded mt-3 tab-pane fade">
+            <div class="container d-flex justify-content-center">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Webcam
+                        <img class="ml-2" src="~/img/WebPageImg/webcam.svg" />
+                    </div>
+                    <div class="panel-body text-center">
+
+                        <div id="my_camera"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<hr>
+<!--Sepete eklemek için barkod taratma kısmı-->
+<br />
+<h3 class="text-center">Sepete eklemek istediğiniz Qr Kod/Barkodu yükleyin</h3>
+<br />
+
+<div class="p-3 bg-white rounded">
+    <ul class="nav nav-tabs">
+        <!--QRCode-->
+        <li class="active"><a data-toggle="tab" href="#cartcodescanner" onclick="durdur();">QR Kod/Barkod Yükle</a></li>
+        <!--Barkod-->
+        <li><a data-toggle="tab" href="#cartwebcam" onclick="baslat2();">Webcam Tarat</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="cartcodescanner" class="tab-pane fade in active">
+            <div class="container d-flex justify-content-center">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Taratmak İstediğiniz QR Kod/Barkod fotoğrafını Yükleyin</h3>
+                        <!--Yüklenen resim QRCodeScanner fonksiyonuna gönderilir-->
+                        <form asp-action="QRCodeScanner" enctype="multipart/form-data">
+                            <div class="file-drop-area mb-2">
+                                <span class="choose-file-button">Resim Seç</span>
+                                <span class="file-message">ya da resmi sürükle bırak...</span>
+                                <!--QRCodeImageFile, BarcodeScannerViewModel içerisinde IFormFile değişkenidir-->
+                                <input class="file-input" asp-for="QRCodeImageFile" accept="image/*">
+                            </div>
+                            <input class="btn btn-info col-md-12" type="submit" value="Tarat" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div id="barkod" class="tab-pane fade">
+        <div class="container d-flex justify-content-center">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Taratmak İstediğiniz Barkodu Yükleyin</h2>-->
+        <!--Yüklenen resim BarcodeScanner fonksiyonuna gönderilir-->
+        <!--<form asp-action="BarcodeScanner" enctype="multipart/form-data">
+        <div class="file-drop-area mb-2">
+            <span class="choose-file-button">Resim Seç</span>
+            <span class="file-message">ya da resmi sürükle bırak...</span>-->
+        <!--BarkodImageFile, BarcodeScannerViewModel içerisinde IFormFile değişkenidir-->
+        <!--<input class="file-input" asp-for="BarkodImageFile" accept="image/*">
+                            </div>
+                            <input class="btn btn-info col-md-12" type="submit" value="Tarat" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+
+
+        <div id="cartwebcam" class="p-3 bg-white rounded mt-3 tab-pane fade">
+            <div class="container d-flex justify-content-center">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Webcam
+                        <img class="ml-2" src="~/img/WebPageImg/webcam.svg" />
+                    </div>
+                    <div class="panel-body text-center">
+
+                        <div id="my_camera_2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<form id="postCart" asp-page="/Order/Cart" method="post">
+</form>
+
+
+<script src="~/js/WebcamJs/webcam.js"></script>
+<script>
+    var timer;
+    function baslat1() {
+        //timer = $.timer(take_snapshot, 2000, true);
+        timer = window.setInterval(take_snapshot, 15000)
+    }
+    function baslat2() {
+        //timer = $.timer(take_snapshot_2, 2000, true);
+        timer = window.setInterval(take_snapshot_2, 10000)
+    }
+    function durdur() {
+        clearInterval(timer);
+    }
+</script>
+<script language="JavaScript">
+    Webcam.set({
+        width: 320,
+        height: 240,
+        image_format: 'jpeg',
+        jpeg_quality: 90
+    });
+    Webcam.attach('#my_camera');
+</script>
+<script language="JavaScript">
+    function take_snapshot() {
+        Webcam.snap(function (data_uri) {
+            Webcam.upload(data_uri, "/Product/WebcamCapture",
+                function (code, text) {
+                    if (text != "null") {
+                        window.location.href = '@Url.Action("WebcamListView", "Product")/' + text;
+                    }
+                });
+        });
+    }
+</script>
+
+<!--Sepete eklemek için webcam-->
+<script language="JavaScript">
+    Webcam.set({
+        width: 320,
+        height: 240,
+        image_format: 'jpeg',
+        jpeg_quality: 90
+    });
+    Webcam.attach('#my_camera_2');
+</script>
+<script language="JavaScript">
+    function post(productID) {
+        document.getElementById("postCart").innerHTML += '<input type="hidden" name="productID" value="' + productID + '" /><input type="hidden" name="returnUrl"value="/Product/CodeScanner" />';
+        document.getElementById("postCart").submit();
+    }
+
+</script>
+<script language="JavaScript">
+    function take_snapshot_2() {
+        Webcam.snap(function (data_uri) {
+            Webcam.upload(data_uri, "/Product/WebcamAddCart",
+                function (code, text) {
+                    if (text != "null") {
+                        post(text);
+                    }
+                });
+        });
+    }
+</script>
+
+
+
+

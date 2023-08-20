@@ -1,0 +1,139 @@
+﻿@page "/userSiparisDetay/{id:int}"
+
+
+
+<h3 class="bg-info text-white text-center p-1">Details a Products</h3>
+
+<table class="table table-sm table-bordered table-striped">
+    <tbody>
+        <tr><th>ID</th><td>@Order.OrderID</td></tr>
+        <tr><th>Alıcı İsmi</th><td>@Order.Name</td></tr>
+        <tr><th>Line1</th><td>@Order.Line1</td></tr>
+        <tr><th>Line2</th><td>@Order.Line2</td></tr>
+        <tr><th>Line3</th><td>@Order.Line3</td></tr>
+        <tr><th>Şehir</th><td>@Order.City</td></tr>
+        <tr><th>Mahalle</th><td>@Order.State</td></tr>
+        <tr><th>Posta Kodu</th><td>@Order.Zip</td></tr>
+        <tr><th>Ülke</th><td>@Order.Country</td></tr>
+        <tr><th>Alıcının Kullanıcı Adı</th><td>@Order.UserName</td></tr>
+        <tr>
+            <th>Hediye Paketi</th>
+            @if (@Order.GiftWrap)
+            {
+                <td>Evet</td>
+            }
+            else
+            {
+                <td>Hayır</td>
+            }
+        </tr>
+    </tbody>
+</table>
+<br />
+<br />
+<h2>Sipariş İçeriği</h2>
+
+<table class="table table-sm table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Product Img</th>
+            <th scope="col">Product Barkod Img</th>
+            <th scope="col">Karekod Img</th>
+            <th scope="col">Product Barkod</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Product Fiyat</th>
+            <th scope="col">Product Adet</th>
+            <th scope="col">Total Fiyatı</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (CartLine p in Order.Lines)
+        {
+            <tr>
+                <th scope="row">@p.Product.productID</th>
+                <td><img src=@p.Product.productImgUrl alt=@p.Product.productName width="100" height="100"></td>
+                <td><img src=@p.Product.productBarkodImgUrl alt=@p.Product.productName width="250" height="100"></td>
+                <td><img src=@p.Product.karekodImgUrl alt=@p.Product.productName width="100" height="100"></td>
+                <td>@p.Product.productBarkod</td>
+                <td>@p.Product.productName</td>
+                <td>@p.Product.productFiyat</td>
+                <td>@p.Quantity</td>
+                <td>@((p.Quantity * Convert.ToDecimal(p.Product.productFiyat)).ToString("c"))</td>
+            </tr>
+        }
+        <tr>
+            <td colspan="8" class="text-right">Toplam Fiyat :</td>
+            <td>@totalPrice</td>
+        </tr>
+
+    </tbody>
+</table>
+@if (Order.IadeMi == false)
+{
+    <div class="card text-center mb-5">
+        <div class="card-header">
+            Sipariş İade İşlemleri
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Bu siparişi iade etmek istiyor musunuz ?</h5>
+            <p class="card-text">İade edilen siparişlerin ücretleri 3 iş günü içerisinde geri iade edilir...</p>
+            <button type="button" class="btn btn-primary" @onclick="() => OpenDeleteDialog()">
+                İade Et
+            </button>
+        </div>
+    </div>
+    @if (DeleteDialogOpen)
+    {
+        <ModalDialog OnClose="@OnDeleteDialogClose"></ModalDialog>
+    }
+    
+}
+
+
+@code {
+    [Inject]
+    public IOrderRepository Repository { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    public bool DeleteDialogOpen { get; set; }
+
+    private void OnDeleteDialogClose(bool accepted)
+    {
+        if (accepted)
+        {
+            iadeEt();
+        }
+        DeleteDialogOpen = false;
+        StateHasChanged();
+    }
+
+    private void OpenDeleteDialog()
+    {
+        DeleteDialogOpen = true;
+        StateHasChanged();
+    }
+
+    public Order Order { get; set; }
+
+    public decimal totalPrice = 0;
+
+    public void iadeEt()
+    {
+        Order.IadeMi = true;
+        Repository.SaveOrder(Order);
+
+    }
+
+    protected override void OnParametersSet()
+    {
+        Order = Repository.Orders.FirstOrDefault(p => p.OrderID == Id);
+        foreach (CartLine p in Order.Lines)
+        {
+            totalPrice = totalPrice + (p.Quantity * Convert.ToDecimal(p.Product.productFiyat));
+        }
+    }
+
+}

@@ -1,0 +1,68 @@
+﻿@page
+@model CartModel
+
+<h2>Sepetinizdeki Ürünler</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Adet</th>
+            <th>Ürün</th>
+            <th class="text-right">Fiyat</th>
+            <th class="text-right">Total Fiyat</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var line in Model.Cart.Lines) {
+            <tr>
+                <td class="text-center">
+
+                    <form asp-page-handler="Cikar" method="post">
+                        <input type="hidden" name="ProductID" value="@line.Product.productID" />
+                        <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                        <button type="submit" class="btn btn-sm btn-danger">Çıkar</button>
+                    </form>
+                    @line.Quantity
+                    <form asp-page-handler="Add" method="post">
+                        <input type="hidden" name="ProductID" value="@line.Product.productID" />
+                        <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                        <button type="submit" class="btn btn-sm btn-secondary">Ekle</button>
+                    </form>
+                    
+                </td>
+
+                <td class="text-left">@line.Product.productName</td>
+                <td class="text-right">@line.Product.productFiyat</td>
+                <td class="text-right">
+                    @((line.Quantity * Convert.ToDecimal(line.Product.productFiyat)).ToString("c"))
+                </td>
+                <td class="text-center">
+                    <form asp-page-handler="Remove" method="post">
+                        <input type="hidden" name="ProductID"
+                               value="@line.Product.productID" />
+                        <input type="hidden" name="returnUrl"
+                               value="@Model.ReturnUrl" />
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            Kaldır
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" class="text-right">Toplam Fiyat:</td>
+            <td class="text-right">
+                @Model.Cart.ComputeTotalValue().ToString("c")
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="text-center">
+    <a class="btn btn-primary" href="@Model.ReturnUrl">Alışveriş Yapmaya Devam Et</a>
+    <a class="btn btn-primary" asp-controller="Order" asp-action="Checkout">
+        Sepetini Onayla
+    </a>
+</div>

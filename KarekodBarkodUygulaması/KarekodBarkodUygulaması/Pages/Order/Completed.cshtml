@@ -1,0 +1,14 @@
+﻿@page
+
+<div class="text-center">
+    <h2>Siparişiniz Tamamlandı!</h2>
+    <p>Sipariş verdiğiniz için teşekkürler #@OrderId</p>
+    <p>Kargonuz en yakın zamanda kapınızda olacak!</p>
+    <a class="btn btn-primary" asp-controller="Home">Alışverişe devam et!</a>
+</div>
+
+@functions {
+
+    [BindProperty(SupportsGet = true)]
+    public string OrderId { get; set; }
+}

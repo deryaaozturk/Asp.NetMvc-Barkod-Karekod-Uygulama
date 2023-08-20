@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Search Product Page";
+}
+@model ProductsViewModel
+    <!--Aratılan ürün veritabanında var ise-->
+@if (Model.Products.Count() != 0)
+{
+    <div class="container-fluid bg-trasparent my-4 p-3" style="position: relative">
+        <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-4 g-3">
+            @foreach (var x in Model.Products)
+            {
+                <div class="col hp m-3">
+                    <div class="card h-100 shadow-sm">
+                        <a asp-area="" asp-controller="Product" asp-action="Index" asp-route-productID=@x.productID>
+                            <img class="card-img-top" src=@x.productImgUrl alt=@x.productName />
+                        </a>
+                        <div class="card-body">
+                            <div class="clearfix mb-3">
+                                <span class="float-start badge rounded-pill bg-success">@x.productFiyat TL</span>
+                            </div>
+                            <h5 class="card-title">
+                                <a target="_blank" asp-area="" asp-controller="Product" asp-action="Index" asp-route-productID=@x.productID>@x.productName</a>
+                            </h5>
+
+                            <div class="d-grid gap-2 my-4">
+
+                                <a asp-area="" asp-controller="Product" asp-action="Index" asp-route-productID=@x.productID class="btn btn-warning bold-btn">Detaylar</a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <!--Aratılan ürün veritabanında yoksa ürün bulunamadı mesajı verilir-->
+    <div class="container d-flex justify-content-center mt-5">
+        <div class="row">
+            <div class="col-md-12 bg-info rounded">
+                <h1 class="text-white">Arattığınız Ürün Bulunmamakta</h1>
+            </div>
+        </div>
+    </div>
+}

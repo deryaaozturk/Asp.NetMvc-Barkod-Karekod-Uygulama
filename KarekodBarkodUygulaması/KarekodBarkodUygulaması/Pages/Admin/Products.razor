@@ -1,0 +1,85 @@
+﻿@page "/admin"
+@page "/admin/products"
+@inherits OwningComponentBase<IProductsRepository>
+
+<table class="table table-sm table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Product Img</th>
+            <th scope="col">Product Barkod Img</th>
+            <th scope="col">Karekod Img</th>
+            <th scope="col">Product Barkod</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Product Fiyat</th>
+            <th scope="col">Product Adet</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ProductData?.Count() > 0)
+        {
+@foreach (Product p in ProductData)
+{
+        <tr>
+            <th scope="row">@p.productID</th>
+            <td><img src=@p.productImgUrl alt=@p.productName width="100" height="100"></td>
+            <td><img src=@p.productBarkodImgUrl alt=@p.productName width="250" height="100"></td>
+            <td><img src=@p.karekodImgUrl alt=@p.productName width="100" height="100"></td>
+            <td>@p.productBarkod</td>
+            <td>@p.productName</td>
+            <td>@p.productFiyat</td>
+            <td>@p.productAdet</td>
+            <td>
+                <NavLink class="btn btn-info btn-sm"
+                         href="@GetDetailsUrl(p.productID)">
+                    Detaylar
+                </NavLink>
+            </td>
+            <td>
+                <NavLink class="btn btn-warning btn-sm"
+                         href="@GetEditUrl(p.productID)">
+                    Düzenle
+                </NavLink>
+            </td>
+            <td>
+                <button class="btn btn-danger btn-sm"
+                        @onclick="@(e => DeleteProduct(p))">
+                    Sil
+                </button>
+            </td>
+        </tr>} }
+            else
+            {
+<tr>
+    <td colspan="5" class="text-center">Ürün Yok</td>
+</tr>}
+    </tbody>
+</table>
+
+<NavLink class="btn btn-primary" href="/admin/products/create">Yeni Ürün Ekle</NavLink>
+
+@code { public IProductsRepository Repository => Service;
+
+            public IEnumerable<Product> ProductData { get; set; }
+
+            protected async override Task OnInitializedAsync()
+            {
+                await UpdateData();
+            }
+
+            public async Task UpdateData()
+            {
+                ProductData = await Repository.Products.ToListAsync();
+            }
+
+            public async Task DeleteProduct(Product p)
+            {
+                Repository.DeleteProducts(p);
+                await UpdateData();
+            }
+
+            public string GetDetailsUrl(int id) => $"/admin/products/details/{id}";
+            public string GetEditUrl(int id) => $"/admin/products/edit/{id}"; }

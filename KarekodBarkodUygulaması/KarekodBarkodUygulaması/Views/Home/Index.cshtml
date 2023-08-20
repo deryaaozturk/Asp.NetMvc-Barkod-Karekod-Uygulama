@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model ProductsViewModel
+<header class="bg-dark py-5">
+    <div class="container px-5">
+        <div class="row gx-5 justify-content-center">
+            <div class="col-lg-6">
+                <div class="text-center my-5">
+                    <h1 class="display-5 fw-bolder text-white mb-2">Karekod Barkod Uygulamasına Hoşgeldin</h1>
+                    <p class="lead text-white-50 mb-4">İstediğiniz ürünün barkodunu ya da QR kodunu okutarak aradığınız ürünü bulabilirsiniz.</p>
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                        <a class="btn btn-primary btn-lg px-4 me-sm-3" asp-area="" asp-controller="Product" asp-action="AllProduct">Ürünlerimiz</a>
+                        <a class="btn btn-outline-light btn-lg px-4" asp-area="" asp-controller="Product" asp-action="CodeScanner">Barkod Okut</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!--Müşteri Yorumları-->
+<section class="py-5 border-bottom">
+    <div class="container px-5 my-5 px-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bolder">Müşteri Referansları</h2>
+            <p class="lead mb-0">Müşterilerimiz bizimle çalışmayı seviyor...</p>
+        </div>
+        <div class="row gx-5 justify-content-center">
+            <div class="col-lg-6">
+                <!-- Testimonial 1-->
+                <div class="card mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i></div>
+                            <div class="ms-4">
+                                <p class="mb-1">Böyle harika bir ürünü bir araya getirdiğiniz için teşekkür ederiz. Sizinle ve tüm ekiple çalışmayı sevdik ve sizi başkalarına tavsiye edeceğiz!</p>
+                                <div class="small text-muted">- Turali Group, Ankara</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Testimonial 2-->
+                <div class="card">
+                    <div class="card-body p-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i></div>
+                            <div class="ms-4">
+                                <p class="mb-1">Tüm ekip, şirketimiz ve markamız için işleri bir araya getirme konusunda çok yardımcı oldu. Ek iş için yakın gelecekte onları tekrar işe alacağız!</p>
+                                <div class="small text-muted">- GDSC Duzce, Düzce</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

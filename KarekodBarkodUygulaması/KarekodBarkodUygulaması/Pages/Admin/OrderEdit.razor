@@ -1,0 +1,75 @@
+﻿@page "/admin/order/edit/{id:int}"
+@inject NavigationManager NavManager
+
+<div class="row px-3">
+    <div class="col-md-4 p-3">
+        <RadzenCard>
+            <h4 class="mb-4">Seçenekler</h4>
+            <RadzenCheckBox @bind-Value=@Order.KargolandiMi Name="CheckBox1" TValue="bool" Change=@(args => OnChangeKargo(args)) />
+            <RadzenLabel Text="Kargoya verildi mi?" Component="CheckBox1" Style="margin-left: 8px; vertical-align: middle;" />
+            <br />
+            <RadzenCheckBox @bind-Value=@Order.TeslimEdildiMi Name="CheckBox2" TValue="bool" Change=@(args => OnChangeTeslim(args)) />
+            <RadzenLabel Text="Teslim edildi mi?" Component="CheckBox2" Style="margin-left: 8px; vertical-align: middle;" />
+        </RadzenCard>
+    </div>
+    <div class="col-md-6 col-lg-4 p-3">
+        @if (Order.KargolandiMi == true)
+        {
+
+            <RadzenCard>
+                <h4 class="mb-4">Kargo Numarasını Girin :</h4>
+                <RadzenTextBox Value="@Order.KargoNumarasi" Change=@(args => OnChangeText(args)) Class="w-100" />
+            </RadzenCard>
+
+        }
+        <RadzenButton style="width: 160px; margin-top: 10px;" Icon="save" BusyText="Kaydediliyor ..." IsBusy=@busy Click=@OnBusyClick Text="Kaydet" />
+        <RadzenButton Click=@(args => OnClick()) Text="Geri dön" ButtonStyle="ButtonStyle.Secondary" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { set; get; }
+
+
+    [Inject]
+    public IOrderRepository Repository { get; set; }
+
+    public Order Order { get; set; }
+
+    bool busy;
+    async Task OnBusyClick()
+    {
+        busy = true;
+        await Task.Delay(1000);
+        busy = false;
+        NavManager.NavigateTo($"/admin/order/details/{Id}");
+    }
+
+    public void OnClick()
+    {
+        NavManager.NavigateTo($"/admin/order/details/{Id}");
+    }
+
+    void OnChangeText(string value)
+    {
+        Order.KargoNumarasi = value;
+        Repository.SaveOrder(Order);
+    }
+
+    void OnChangeKargo(bool value)
+    {
+        Order.KargolandiMi = value;
+        Repository.SaveOrder(Order);
+    }
+    void OnChangeTeslim(bool value)
+    {
+        Order.TeslimEdildiMi = value;
+        Repository.SaveOrder(Order);
+    }
+
+    protected override void OnParametersSet()
+    {
+        Order = Repository.Orders.FirstOrDefault(p => p.OrderID == Id);
+    }
+}

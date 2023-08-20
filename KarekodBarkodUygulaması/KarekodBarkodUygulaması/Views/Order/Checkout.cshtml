@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<UserModel> SignInManager
+@inject UserManager<UserModel> UserManager
+@model Order
+
+<div class="container">
+    <h2>Son kontrolleri yapın</h2>
+    <p>Lütfen bilgilerinizi girin size hemen kargolayalım!</p>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <form asp-action="Checkout" method="post">
+        <h3>Kargolanacak adres bilgilerini girin</h3>
+        <div class="form-group">
+            <label>Alıcı İsmi :</label><input asp-for="Name" class="form-control" />
+        </div>
+        <h3>Adres</h3>
+        <div class="form-group">
+            <label>Line 1 :</label><input asp-for="Line1" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Line 2 :</label><input asp-for="Line2" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Line 3 :</label><input asp-for="Line3" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Şehir :</label><input asp-for="City" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Mahalle :</label><input asp-for="State" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Posta Kodu :</label><input asp-for="Zip" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Ülke :</label><input asp-for="Country" class="form-control" />
+        </div>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <input type="hidden" asp-for="UserName" value="@User.Identity.Name" />
+        }
+        else
+        {
+            <input type="hidden" asp-for="UserName" value="Kayıtsız Kullanıcı" />
+        }
+        <input type="hidden" asp-for="IadeMi" value="false" />
+        <input type="hidden" asp-for="KargoNumarasi" value=null />
+
+        <h3>Seçenekler</h3>
+        <div class="checkbox">
+            <label>
+                <input asp-for="GiftWrap" /> Hediye Paketi
+            </label>
+        </div>
+        <div class="text-center">
+            <input class="btn btn-primary" type="submit" value="Siparişi Tamamla" />
+        </div>
+    </form>
+</div>

@@ -1,0 +1,103 @@
+﻿@page "/admin/products/edit/{id:int}"
+@page "/admin/products/create"
+@inherits OwningComponentBase<IProductsRepository>
+@using KarekodBarkodUygulaması.Pages.Service
+@inject IFileUpload fileUpload
+<style>
+    div.validation-message {
+        color: rgb(220, 53, 69);
+        font-weight: 500
+    }
+</style>
+
+<h3 class="bg-@ThemeColor text-white text-center p-1">@TitleText a Product</h3>
+
+<EditForm Model="product" OnValidSubmit="SaveProduct" Enctype="multipart/form-data">
+    <DataAnnotationsValidator />
+    @if (product.productID != 0)
+    {
+        <div class="form-group">
+            <label>ID</label>
+            <input class="form-control" disabled value="@product.productID" />
+        </div>}
+    <div class="form-group">
+        <label>Product Barkod</label>
+        <ValidationMessage For="@(() => product.productBarkod)" />
+        <InputText class="form-control" @bind-Value="product.productBarkod" />
+    </div>
+    <div class="form-group">
+        <label>Product Name</label>
+        <ValidationMessage For="@(() => product.productName)" />
+        <InputText class="form-control" @bind-Value="product.productName" />
+    </div>
+    <div class="form-group">
+        <label>Product Açıklama</label>
+        <ValidationMessage For="@(() => product.productAciklama)" />
+        <InputText class="form-control" @bind-Value="product.productAciklama" />
+    </div>
+    <div class="form-group">
+        <label>Product Fiyat</label>
+        <ValidationMessage For="@(() => product.productFiyat)" />
+        <InputText class="form-control" @bind-Value="product.productFiyat" />
+    </div>
+    <div class="form-group">
+        <label>Product Img</label>
+        <BlazorInputFile.InputFile OnChange="HandleFileSelected"></BlazorInputFile.InputFile>
+    </div>
+    <div class="form-group">
+        <label>Product Adet</label>
+        <ValidationMessage For="@(() => product.productAdet)" />
+        <InputNumber class="form-control" @bind-Value="product.productAdet" />
+    </div>
+    <button type="submit" class="btn btn-@ThemeColor">Kaydet</button>
+    <NavLink class="btn btn-secondary" href="/admin/products">Vazgeç</NavLink>
+</EditForm>
+
+@code { public IProductsRepository Repository => Service;
+
+    [Inject]
+    public NavigationManager NavManager { get; set; }
+
+    [Parameter]
+    public int Id { get; set; } = 0;
+
+    public Product product { get; set; } = new Product();
+
+    protected override void OnParametersSet()
+    {
+        if (Id != 0)
+        {
+            product = Repository.Products.FirstOrDefault(p => p.productID == Id);
+        }
+    }
+
+    public void SaveProduct()
+    {
+        if (file != null)
+        {
+            product.productImgUrl = "/img/productImg/" + file.Name;
+        }
+        if (Id == 0)
+        {
+
+            Repository.CreateProducts(product);
+        }
+        else
+        {
+            Repository.SaveProducts(product);
+        }
+        NavManager.NavigateTo("/admin/products");
+    }
+
+    IFileListEntry file;
+    async Task HandleFileSelected(IFileListEntry[] files)
+    {
+        file = files.FirstOrDefault();
+        if (file != null)
+        {
+            await fileUpload.UploadAsync(file);
+        }
+    }
+
+    public string ThemeColor => Id == 0 ? "primary" : "warning";
+    public string TitleText => Id == 0 ? "Create" : "Edit"; }

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KarekodBarkodUygulaması", "KarekodBarkodUygulaması\KarekodBarkodUygulaması.csproj", "{D90B5156-2AFF-4572-A516-7A9C202F8308}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D90B5156-2AFF-4572-A516-7A9C202F8308}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D90B5156-2AFF-4572-A516-7A9C202F8308}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D90B5156-2AFF-4572-A516-7A9C202F8308}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D90B5156-2AFF-4572-A516-7A9C202F8308}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BF2851B5-B582-4109-A8EF-6741D41C1EF0}
+	EndGlobalSection
+EndGlobal

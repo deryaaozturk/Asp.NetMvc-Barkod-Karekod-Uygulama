@@ -1,0 +1,20 @@
+﻿@page "/admin"
+@{ Layout = null; }
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Administrator")]
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Barkodex Admin</title>
+    <link href="/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="_content/BlazorInputFile/inputfile.js"></script>
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css">
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+    <base href="/" />
+</head>
+<body>
+    <component type="typeof(Routed)" render-mode="Server" />
+    <script src="/_framework/blazor.server.js"></script>
+</body>
+</html>

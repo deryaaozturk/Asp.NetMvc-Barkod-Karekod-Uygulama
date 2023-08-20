@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "BarcodeScanner Product Page";
+}
+@model ProductsViewModel
+<style>
+    .card {
+        margin-bottom: 30px;
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0 solid transparent;
+        border-radius: 0;
+    }
+
+        .card .card-subtitle {
+            font-weight: 300;
+            margin-bottom: 10px;
+            color: #8898aa;
+        }
+
+    .table-product.table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f3f8fa !important
+    }
+
+    .table-product td {
+        border-top: 0px solid #dee2e6 !important;
+        color: #728299 !important;
+    }
+
+    .kutu img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!--Taratılan ürün veritabanında var ise-->
+@if (Model.Products.Count() != 0)
+{
+    <!--Ürün bilgilerinin listelenmesi-->
+    <div class="container">
+        @foreach (var p in Model.Products)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">@p.productName</h3>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="white-box text-center kutu"><img src=@p.productImgUrl alt=@p.productName class="img-responsive"></div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <h3 class="box-title mt-5">Ürün Genel Bilgileri</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-product">
+                                    <tbody>
+                                        <tr>
+                                            <td width="390">Ürün Açıklaması</td>
+                                            <td>@p.productAciklama</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="390">Ürün Fiyatı</td>
+                                            <td>@p.productFiyat TL</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ürün Barkodu</td>
+                                            <td>@p.productBarkod</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ürün Stok Adeti</td>
+                                            <td>@p.productAdet</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ürün Barkodu</td>
+                                            <td><img src=@p.productBarkodImgUrl alt=@p.productName class="img-responsive" width="250" height="100"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ürün Karekodu</td>
+                                            <td><img src=@p.karekodImgUrl alt=@p.productName class="img-responsive" width="100" height="100"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <form id="@p.productID" asp-page="/Order/Cart" method="post">
+                                    <input type="hidden" name="productID" value="@p.productID" />
+                                    <input type="hidden" name="returnUrl"
+                                           value="/Product/AllProduct" />
+
+                                    <span class="card-text p-1">
+                                        <button type="submit"
+                                                class="btn btn-success btn-sm pull-right" style="float:right">
+                                            Sepete Ekle
+                                        </button>
+                                    </span>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <!--Ürün veritabanında yoksa ekrana taratılan ürün barkodu ve bilgilendirici mesaj verilir-->
+<div class="container d-flex justify-content-center mt-5">
+    <div class="row">
+        <div class="col-md-12 bg-info rounded">
+            <h1 class="text-white">Tarattığınız Ürün Bulunmamakta</h1>
+            <h4 class="text-white">Tarattığınız Ürün Barkodu : @ViewBag.BarcodeText</h4>
+        </div>
+    </div>
+</div>
+}

@@ -1,0 +1,118 @@
+﻿@page "/userSiparis"
+@inherits OwningComponentBase<IOrderRepository>
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<UserModel> _UserManager
+
+<div class="card mt-3">
+<h2 class="text-center mb-3 mt-3">Siparişlerin</h2>
+
+
+<table class="table table-sm table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Şehir</th>
+            <th scope="col">Ülke</th>
+            <th scope="col">Line 1</th>
+            <th scope="col">Line 2</th>
+            <th scope="col">Line 3</th>
+            <th scope="col">Alıcı İsmi</th>
+            <th scope="col">Mahalle</th>
+            <th scope="col">Posta Kodu</th>
+            <th scope="col">Hediye Paketi</th>
+            <th scope="col">Durumu</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (OrderData?.Count() > 0)
+        {
+            @foreach (Order orders in OrderData)
+            {
+        <tr>
+            <th scope="row">@orders.OrderID</th>
+            <td>@orders.City</td>
+            <td>@orders.Country</td>
+            <td>@orders.Line1</td>
+            <td>@orders.Line2</td>
+            <td>@orders.Line3</td>
+            <td>@orders.Name</td>
+            <td>@orders.State</td>
+            <td>@orders.Zip</td>
+            @if (@orders.GiftWrap)
+            {
+                <td>Evet</td>
+
+            }
+            else
+            {
+                <td>Hayır</td>
+            }
+            @if (orders.IadeMi)
+            {
+                <td>İade Edildi</td>
+            }
+            else if (orders.TeslimEdildiMi)
+            {
+
+                <td>Teslim Edildi</td>
+            }
+            else if (orders.KargolandiMi)
+            {
+
+                <td>Kargoya Verildi</td>
+            }
+            else
+            {
+                <td>Hazırlanıyor</td>
+            }
+            <td>
+                <NavLink class="btn btn-info btn-sm"
+                         href="@GetDetailsUrl(orders.OrderID)">
+                    Detay
+                </NavLink>
+            </td>
+        </tr>
+            } }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">Sipariş Yok</td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
+
+
+
+@code {
+    public IOrderRepository Repository => Service;
+
+    public IEnumerable<Order> OrderData { get; set; }
+
+    public UserModel model;
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity.IsAuthenticated)
+        {
+            model = new UserModel(user.Identity.Name);
+            model = await _UserManager.FindByNameAsync(user.Identity.Name);
+
+        }
+        await UpdateData();
+    }
+
+    public async Task UpdateData()
+    {
+        OrderData = await Repository.Orders.Where(p => p.UserName == model.UserName).ToListAsync();
+    }
+
+
+
+    public string GetDetailsUrl(int id) => $"/userSiparisDetay/{id}";
+
+}
